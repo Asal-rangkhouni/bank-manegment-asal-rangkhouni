@@ -1,6 +1,5 @@
 '''
 Class --> vasl bshe b sootone databaset
-
 '''
 
 
