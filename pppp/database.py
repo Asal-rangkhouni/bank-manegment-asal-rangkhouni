@@ -5,8 +5,6 @@ tamame code hameja hamine
 
 har projecti
 
-
-
 '''
 
 
