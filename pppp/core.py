@@ -1,3 +1,6 @@
+#salam ostad vaght bekheyr dar file core.py line208 , 209 ye moshkeli hast ke run nemishe mige
+#return outside function mn garchi aghab jelo mikonm dorost nemishe
+
 from database import get_session
 from utils import hash_password, check_password
 from models import Customer, Account , Transaction
