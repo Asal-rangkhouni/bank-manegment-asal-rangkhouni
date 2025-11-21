@@ -6,7 +6,7 @@ from core import AdminPanel
 class AdminGUI:
 
     def __init__(self,bank_system):
-        self.bank=bank
+        self.bank= bank_system 
         self.root=tk.TK()
         self.root.title('Bank Management System')
         self.root.geometry('800x600')
