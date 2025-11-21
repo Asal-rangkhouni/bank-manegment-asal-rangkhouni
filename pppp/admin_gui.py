@@ -49,7 +49,46 @@ class AdminGUI:
 
     #-----OPTIONALLLLL-----
     def gui_create_customer(self):
-        pass
+        self.clear()
+        tk.Label(self.root , text="Creat New Customer" , font=("Arial" , 18 , "bold")).pack(pady=20)
+
+        #frame vorodi
+        frame = tk.Frame(self.root)
+        frame.pack(pady=10)
+
+        lbl1 = ["Name" , "Last name" , "Email" , "Phone" , "Address"]
+        self.entrise = {}
+
+        for label in lbl1 :
+            tk.Label(frame , text= label + ":" , anchor="w" ).pack()
+            entry = tk.Entry(frame, width=40)
+            entry.pack(pady=5)
+            self.entries[label.lower()] = entry
+
+        #dokme moshtari
+        tk.Button(self.root , text="Creat Customer" , bg="green" , fg="white" , width=20 , command=self.create_customer_action).pack(pady=20)
+        tk.Button(self.root , text="Back" , command= self.show_dashboard)
+
+        #dokme submit
+        def create_customer_action():
+            name = self.entries["name"].get()
+            last_name = self.entrise["Last_name"].get()
+            email = self.entrise["email"].get()
+            phone = self.entrise["phone"].get()
+            address = self.entrise["address"].get()
+
+            if not name or not email:
+                messagebox.showerror("Error", "Name and Email are required!")
+                return
+            
+            try:
+                self.bank.create_customer(name, last_name, email, phone, address)
+                messagebox.showinfo("Success", "Customer created successfully!")
+                self.show_dashboard()
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+
+    
     def gui_create_account(self):
         pass
     def gui_view_accounts(self):
