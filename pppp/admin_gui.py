@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 from core import AdminPanel
 
-
 class AdminGUI:
 
     def __init__(self,bank_system):
