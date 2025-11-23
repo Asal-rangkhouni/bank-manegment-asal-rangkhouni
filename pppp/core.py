@@ -10,6 +10,9 @@ mitoonid kole code ro bebarid editor ya IDE khdoeton
 oonja rahat tare kar krdn bad inja copy paste konid
 baz soali bood beporsid moafagh bashid
 
+Asal:
+ostad be nazare shoma man kare digeii ham bayad anjam bedam ya bayad sabr
+koniam ta jalase 2 ?
 '''
 
 
