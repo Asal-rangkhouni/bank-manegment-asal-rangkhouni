@@ -37,13 +37,85 @@ class AdminGUI:
     def show_dashboard(self):
 
         self.clear()
-        tk.Label(self.root, text="Admin Dashboard", font=("Arial", 18, "bold")).pack(pady=20)
-        tk.Button(self.root, text="Create Customer", width=25, command=self.gui_create_customer).pack(pady=5)
-        tk.Button(self.root, text="Create Account", width=25, command=self.gui_create_account).pack(pady=5)
-        tk.Button(self.root, text="View Accounts", width=25, command=self.gui_view_accounts).pack(pady=5)
-        tk.Button(self.root, text="View Transactions", width=25, command=self.gui_view_transactions).pack(pady=5)
-        tk.Button(self.root, text="Delete Account", width=25, command=self.gui_delete_account).pack(pady=5)
-        tk.Button(self.root, text="Logout", width=25, bg="red", fg="white", command=self.show_login_window).pack(pady=20)
+        #rang koli paszamine
+        self.root.configure(bg= "#20252b")
+
+        #frame safhe namayesh
+        screen = tk.Frame(self.root , bg= "#1b2a34", bd=8 , relief= "ridge" )
+        screen.place(relx=0.5, rely=0.5 , anchor= "center" , width=600 , height= 400)
+
+        # esm baka screen
+        tk.Label(
+            screen ,
+            text = "BAKN ADMIN TERMINAL " , 
+            font= ("Consolas" , 18 , " bold"),
+            bg= "#1b2a34" ,
+            fg = "#00ff99"
+        ).pack(pady=10)
+
+        #tozih zir onvan
+        tk.Label(
+            screen ,
+            text= "Select an operation:" , 
+            font = ("Consolas" , 12) ,
+            bg = "#1b2a34" ,
+            fg= "#cfd8dc"       
+        ).pack(pady=5)
+
+        #frame dokme
+        btn_frame = tk.Frame(screen , bg = "#1b2a34")
+        btn_frame.pack(expand=True, fill="both", pady=10)
+
+        #dokme samt chap
+        left_frame = tk.Frame(btn_frame , bg = "#1b2a34")
+        left_frame.pack(side="left", expand=True, fill="both", padx=10)
+
+        #dokme samt rast
+        right_frame = tk.Frame(btn_frame , bg = "#1b2a34")
+        right_frame.pack(side="right", expand=True, fill="both", padx=10)
+
+        #style dokme
+        btn_style = {
+        "font": ("Consolas", 11, "bold"),
+        "width": 20,
+        "height": 2,
+        "bg": "#263238",
+        "fg": "#eceff1",
+        "activebackground": "#37474f",
+        "activeforeground": "#ffffff",
+        "bd": 2,
+        "relief": "raised",
+        "cursor": "hand2"
+    }
+
+        #dokme samt chap
+        tk.Button(left_frame, text="Create Customer", command=self.gui_create_customer, **btn_style).pack(pady=8)
+        tk.Button(left_frame, text="Create Account", command=self.gui_create_account, **btn_style).pack(pady=8)
+        tk.Button(left_frame, text="View Accounts", command=self.gui_view_accounts, **btn_style).pack(pady=8)
+
+        #dokme samt rast
+        tk.Button(right_frame, text="View Transactions", command=self.gui_view_transactions, **btn_style).pack(pady=8)
+        tk.Button(right_frame, text="Delete Account", command=self.gui_delete_account, **btn_style).pack(pady=8)
+        tk.Button(
+        right_frame,
+        text="Logout",
+        command=self.show_login_window,
+        **btn_style,
+        bg="#b71c1c",
+        activebackground="#d32f2f"
+    ).pack(pady=8)
+
+
+        #payam atm
+        status = tk.Label(
+        self.root,
+        text="READY | Insert admin command...",
+        font=("Consolas", 10),
+        bg="#20252b",
+        fg="#90a4ae"
+    )
+        status.pack(side="bottom", fill="x")
+
 
 
     #-----OPTIONALLLLL-----
