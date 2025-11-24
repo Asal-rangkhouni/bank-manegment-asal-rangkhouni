@@ -14,10 +14,6 @@ Asal:
 ostad be nazare shoma man kare digeii ham bayad anjam bedam ya bayad sabr
 koniam ta jalase 2 ?
 '''
-
-
-
-
 from database import get_session
 from utils import hash_password, check_password
 from models import Customer, Account , Transaction
@@ -31,12 +27,12 @@ class AdminPanel:
 
 
 
-    def create_customer(self,name,email,age,phone,address):
+    def create_customer(self,name,last_name,email,phone,address):
         #row tooye database besazam
         
         #^^^
         #kare shomast *** age, phone, address tooye models.py inja ham bezarid *******
-        customer= Customer(name=name,email=email)
+        customer= Customer(name=name,last_name = last_name,email=email,phone = phone , address = address)
 
         #ta alan classesho sakhti tooye python
         #zakhire bshe?? tooey db
@@ -58,23 +54,26 @@ class AdminPanel:
         #lag banki
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        print(f"[BANK SYSTEM]\n"
+        print(
+            f"[BANK SYSTEM]\n"
             f"Time: {timestamp}\n"
             f"Customer ID: {customer_id}\n"
             f"Status: Verified ✓\n"
-            f"Action: Generating new card number...")
-            
+            f"Action: Generating new card number..."
+           )
 
         #2) sakht shomare card
         card_number = self._generate_card_number()
 
         #3) sakht hesab
-        account = Account(customer_id=customer_id,
+        account = Account(
+            customer_id=customer_id,
             account_type=account_type,
             balance=balance,
             pin=pin,
-            card_number=card_number)
-            
+            card_number=card_number
+        )
+
 
         #4) zakhire
         self.session.add(account)
@@ -86,11 +85,12 @@ class AdminPanel:
         return account
 
 
+    #-------
 
     def show_balance(self,account_id):
         account=self.session.get(Account,account_id)
         if not account:
-            print(f"Balance for account {account_id}: {balance:,.0f} USD")
+            print(f"[BAKN SYSTEM] : Balance cheak faild-> account {account_id}: not found.")
 
             raise Exception(f'Account with id {account_id} not found')
 
@@ -111,12 +111,13 @@ class AdminPanel:
         account.balance = old_balance + amount
         self.session.commit()
 
-        print(f"[BANK SYSTEM] Deposit successful \n"
-        f"Account: {account_id}\n"
-        f"Old Balance: {old_balance:,.0f} USD\n"
-        f"Amount Deposited: {amount:,.0f} USD\n"
-        f"New Balance: {account.balance:,.0f} USD")
-        
+        print(
+            f"[BANK SYSTEM] Deposit successful \n"
+            f"Account: {account_id}\n"
+            f"Old Balance: {old_balance:,.0f} USD\n"
+            f"Amount Deposited: {amount:,.0f} USD\n"
+            f"New Balance: {account.balance:,.0f} USD"
+    )
 
         return account
 
@@ -124,7 +125,7 @@ class AdminPanel:
         account = self.session.get(Account , account_id)
 
         if not account:
-            print(f"[BANK SYSTEM] Withdrawal failed → Account {account_id} not found ")
+            print(f"[BANK SYSTEM]: Withdrawal failed → Account {account_id} not found ")
             raise Exception(f"Account with id {account_id} not found")
     
         # mojodi ghabl
@@ -133,7 +134,27 @@ class AdminPanel:
         #cheeck kardan mojodi
 
         if amount > old_balance:
-            print(f"[BANK SYSTAM] Withdraw ")
+            print(
+                f"[BANK SYSTAM]: Withdraw denied."
+                f"Account:{account_id} USD \n"
+                f"Attempted:{amount:,.0f} USD \n"
+                f"Available: {old_balance:,.0f} USD\n"
+                f"Reason: Insufficient funds"
+            )
+            raise Exception("Insufficient balance")
+
+        account.balance -= amount
+        self.session.commit()
+
+        print(
+            f"[BANK SYSTEM] Withdrawal successful ✓\n"
+            f"Account: {account_id}\n"
+            f"Old Balance: {old_balance:,.0f} USD\n"
+            f"Amount Withdrawn: {amount:,.0f} USD\n"
+            f"New Balance: {account.balance:,.0f} USD"
+    )
+
+        return account
 
 
 
@@ -154,13 +175,14 @@ class AdminPanel:
 
         #cheak mojodi 
         if amount > from_acc.balance:
-            print(f"[BANK SYSTEM] Transfer denied X \n"
+            print(
+                f"[BANK SYSTEM] Transfer denied X \n"
                 f"From Account :{from_account_id}\n"
                 f"To Account : {to_account_id}\n"
                 f"Atempted Amount: {amount:,.0f} USD \n"
                 f"Availble Balance : {from_acc.balance:,.0f} USD \n"
-                f"Reason: Insufficient funds")
-                
+                f"Reason: Insufficient funds"
+            )
             raise Exception("Insufficient balance")
         
         #bardasht az ferestande
@@ -174,7 +196,8 @@ class AdminPanel:
         self.session.commit()
 
         #last print
-        print(f"[BANK SYSTEM] Transfer Successful \n"
+        print(
+            f"[BANK SYSTEM] Transfer Successful \n"
             f"From Account :{from_account_id}\n"
             f"To Account: {to_account_id}\n"
             f"Anount :{amount:,.0f} USD\n"
@@ -195,12 +218,13 @@ class AdminPanel:
             raise Exception(f"Account with id {account_id} not found")
         
         #gereftan trakonesh ha
-        transactions = (self.session
+        transactions = (
+        self.session
         .query(Transaction)
         .filter_by(account_id=account_id)
         .order_by(Transaction.time.desc())
-        .all())
-        
+        .all()
+    )
         if not transactions:
             print(f"[BAMK SYSTEM]: NO Transaction found for account : {account_id}")
             return []
@@ -214,11 +238,13 @@ class AdminPanel:
             time_str = i.time.strftime("%Y-%m-%d %H:%M:%S")
             print(
             f"{time_str} | {i.type.upper():8} | {sign}{i.amount:,.0f} USD")
+            
+            print("-" * 60)
 
-        #inja moshgkel bood **** dorostesh krdm
-        print("-" * 60)
-    
         return transactions
+
+
+    
 
 
     #shomare card
@@ -227,10 +253,22 @@ class AdminPanel:
     
 
 
+    
+
+
+
+
+
+
 #class GUI --> 
 #gui --> fucntion --> adminpanel.create() adminpanel.() felan felan()\
 
 #a=AdminPanel()
 #a.create_customer('ali','email' , 'password', 'sen','shomare carte melisho bege')
+
+
+
+
+
 
 
