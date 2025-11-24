@@ -4,10 +4,7 @@ ma fght inja tarif mikonim k b kodom database vasl beshe
 tamame code hameja hamine
 
 har projecti
-
 '''
-
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base,sessionmaker
 
