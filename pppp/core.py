@@ -13,6 +13,12 @@ baz soali bood beporsid moafagh bashid
 Asal:
 ostad be nazare shoma man kare digeii ham bayad anjam bedam ya bayad sabr
 koniam ta jalase 2 ?
+
+
+APM:
+salam aya porozheye shoma takmil shode? tashih beshe?
+
+
 '''
 from database import get_session
 from utils import hash_password, check_password
