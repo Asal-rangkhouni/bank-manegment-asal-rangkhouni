@@ -13,24 +13,84 @@ class AdminGUI:
         self.show_login_window()
         self.root.mainloop()
 
+    def clear(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+
     def show_login_window(self):
         self.clear()
-        tk.Label(self.root, text="Admin Login", font=("Arial", 18, "bold")).pack(pady=20)
-        tk.Label(self.root, text="Username:").pack()
-        self.username_entry = tk.Entry(self.root)
-        self.username_entry.pack()
-        tk.Label(self.root, text="Password:").pack()
-        self.password_entry = tk.Entry(self.root, show="*")
-        self.password_entry.pack()
-        tk.Button(self.root, text="Login", bg="blue", fg="white", command=self.login).pack(pady=20)
+        self.root.configure(bg="#20252b")
+
+        #manitor vasat atm
+        screen = tk.Frame(self.root , bg= "#1b2a34", bd=8, relief="ridge")
+        screen.place(relx=0.5, rely=0.5, anchor="center", width=500, height=350)
+        #onvan
+        tk.Label(
+            screen,
+            text="ADMIN AUTHENTICATION" ,
+            font = ("Consolas", 18, "bold") ,
+            bg="#1b2a34",
+            fg="#00ff99"
+        ).pack(pady=15)
+
+        #form frame
+        form = tk.Frame(screen , bg= "#1b2a34")
+        form.pack(pady = 10) 
+
+        #username
+        tk.Label(form, text="Username:", font=("Consolas", 12), bg="#1b2a34", fg="#cfd8dc").pack(anchor="w")
+        self.username_entry = tk.Entry(form, width=30, font=("Consolas", 12), bg="#263238", fg="white", insertbackground="white")
+        self.username_entry.pack(pady=5)
+
+        #passwors
+        tk.Label(form , text="Password:" ,font=("Consolas" , 12)  , bg="#1b2a34", fg="#cfd8dc").pack(anchor="w")
+        self.password_entry = tk.Entry(form , width=30, font=("Consolas", 12), show="*", bg="#263238", fg="white", insertbackground="white")
+        self.password_entry.pack(pady=5)
+
+        #dokme login
+        tk.Button(
+        screen,
+        text="LOGIN",
+        font=("Consolas", 12, "bold"),
+        width=20,
+        height=1,
+        bg="#009688",
+        fg="white",
+        activebackground="#00796b",
+        cursor="hand2",
+        command=self.login
+    ).pack(pady=20)
+        
+        #navar vaziat
+        self.status_label = tk.Label(
+        self.root,
+        text="READY | Please enter admin credentials...",
+        font=("Consolas", 10),
+        bg="#20252b",
+        fg="#90a4ae"
+    )
+        
+        self.status_label = tk.Label(self.root, text="READY | Please enter admin credentials...",
+                             font=("Consolas", 10),
+                             bg="#20252b",
+                             fg="#90a4ae")
+        self.status_label.pack(side="bottom", fill="x")
 
     def login(self):
-        username = self.username_entry.get()
-        password = self.password_entry.get()
+        username = self.username_entry.get().strip()
+        password = self.password_entry.get().strip()
         # For demo, hardcoded admin credentials
+
+        if not username or not password:
+            self.status_label.config(text="ERROR | Username and password required.")
+            messagebox.showerror("Login Error", "Username and password are required.")
+            return
+
         if username == "admin" and password == "1234":
+            self.status_label.config(text="ACCESS GRANTED | Loading dashboard...")
             self.show_dashboard()
         else:
+            self.status_label.config(text="ACCESS DENIED | Invalid credentials.")
             messagebox.showerror("Error", "Invalid credentials")
 
 
