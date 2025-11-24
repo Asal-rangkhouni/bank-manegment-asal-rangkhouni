@@ -31,14 +31,14 @@ id balance type pin ..   card_number
 class Customer(Base):
     __tablename__ = "customers"
     id = Column(Integer, primary_key=True)
-    name= Column(String, nullable=False)
-    email= Column(String, unique=True)
-    age = Column(Integer)
+    name = Column(String, nullable=False)
+    last_name = Column(String)   
+    email = Column(String, unique=True, nullable=False)
     phone = Column(String)
     address = Column(String)
+    age = Column(Integer)
 
-    accounts= relationship("Account", back_populates="customer")
-
+    accounts = relationship("Account", back_populates="customer")
 
 
 
@@ -61,7 +61,9 @@ class Account(Base):
 class Transaction(Base):
     __tablename__ = "Transaction"
     id = Column(Integer , primary_key= True)
-    account_id = Column(Integer , ForeignKey = ("accounts.id"))
-    amount = Column(Float)
-    type = Column(String)
+    account_id = Column(Integer , ForeignKey = ("accounts.id"), nullable=False)
+    amount = Column(Float, nullable=False)
+    type = Column(String, nullable=False)
     time = Column(DateTime, default=datetime.utcnow)
+
+    account = relationship("Account", back_populates="transactions")
