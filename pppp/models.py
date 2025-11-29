@@ -1,14 +1,7 @@
-'''
-Class --> vasl bshe b sootone databaset
-'''
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database import Base
-
-
-
-#--------------------TABLE K MIKHAY BSAZI CLASS------
 
 
 #_----costumer table------
