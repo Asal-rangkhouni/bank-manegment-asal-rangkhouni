@@ -27,10 +27,10 @@ import numpy as np
 from datetime import datetime
 
 
+
 class AdminPanel:
     def __init__(self):
         self.session=get_session()
-
 
 
     def create_customer(self,name,last_name,email,phone,address):
