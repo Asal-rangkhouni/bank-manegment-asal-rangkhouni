@@ -8,7 +8,6 @@ engine= create_engine("mysql+mysqlconnector://asal:Milad004800@localhost",echo=F
 Base = declarative_base()
 
 SessionLocal = sessionmaker(bind=engine , autoflash=False, autocommit=False,future=True )
-
 #helper
 def get_session():
     return SessionLocal()
