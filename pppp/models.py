@@ -46,7 +46,6 @@ class Account(Base):
     transactions= relationship("Transaction", back_populates="account")
 
 
-
 #-------Transactions------
 class Transaction(Base):
     __tablename__ = "Transaction"
