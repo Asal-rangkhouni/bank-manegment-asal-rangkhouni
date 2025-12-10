@@ -212,7 +212,6 @@ class AdminPanel:
         return from_acc, to_acc
 
 
-
     def show_transaction(self,account_id):
         #cheak kardan account
         account = self.session.get(Account , account_id)
