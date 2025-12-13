@@ -29,7 +29,7 @@ class AdminPanel:
     def __init__(self):
         self.session=get_session()
 
-
+    #-------- Customer --------
     def create_customer(self,name,last_name,email,phone,address):
         #row tooye database besazam
         
@@ -43,13 +43,12 @@ class AdminPanel:
         self.session.commit()
         print(f'customer {name} created successfully')
         return customer
-
+        
+    #-------- Account --------
     def create_account(self,customer_id,account_type,balance, pin):
         customer=self.session.get(Customer,customer_id)
         #row ro bekesham biron
-
-        if not customer:
-            
+        if not customer: 
             raise Exception(f'Customer with id {customer_id} not found')
         #1) hash pin
         hashed_pin=hash_password(pin)
@@ -73,10 +72,9 @@ class AdminPanel:
             customer_id=customer_id,
             account_type=account_type,
             balance=balance,
-            pin=pin,
+            pin=hashed_pin,
             card_number=card_number
         )
-
 
         #4) zakhire
         self.session.add(account)
@@ -84,25 +82,21 @@ class AdminPanel:
 
         # 5) chap natije
         print(f"Account created for customer {customer_id} | Card Number: {card_number}")
-
         return account
 
 
-    #-------
+      #-------- Balance --------
 
     def show_balance(self,account_id):
         account=self.session.get(Account,account_id)
         if not account:
-            print(f"[BAKN SYSTEM] : Balance cheak faild-> account {account_id}: not found.")
-
             raise Exception(f'Account with id {account_id} not found')
+            print(f"[BANK SYSTEM] :Account {account_id} | Current balance: {account.balance:,.0f} USD")
 
         balance= account.balance
-
-        print (f"Account {account_id} | Current balance: {balance}")
         return balance
 
-    
+      #-------- Deposit --------
     def deposit(self,account_id,amount):
         account=self.session.get(Account,account_id)
         if not account:
@@ -112,6 +106,15 @@ class AdminPanel:
         # variz movafagh
         old_balance = account.balance
         account.balance = old_balance + amount
+        
+         #zakhire tarakonesh
+        transaction = Transaction(
+            account_id=account.id,
+            type="deposit",
+            amount=amount,
+            time=datetime.now()
+        )
+        self.session.add(transaction)
         self.session.commit()
 
         print(
@@ -120,10 +123,10 @@ class AdminPanel:
             f"Old Balance: {old_balance:,.0f} USD\n"
             f"Amount Deposited: {amount:,.0f} USD\n"
             f"New Balance: {account.balance:,.0f} USD"
-    )
-
+        )
         return account
 
+     #-------- Withdraw --------
     def withdraw(self,account_id,amount):
         account = self.session.get(Account , account_id)
 
@@ -147,7 +150,15 @@ class AdminPanel:
             raise Exception("Insufficient balance")
 
         account.balance -= amount
+        transaction = Transaction(
+            account_id=account.id,
+            type="withdraw",
+            amount=amount,
+            time=datetime.now()
+        )
+        self.session.add(transaction)
         self.session.commit()
+        
 
         print(
             f"[BANK SYSTEM] Withdrawal successful ✓\n"
@@ -155,12 +166,11 @@ class AdminPanel:
             f"Old Balance: {old_balance:,.0f} USD\n"
             f"Amount Withdrawn: {amount:,.0f} USD\n"
             f"New Balance: {account.balance:,.0f} USD"
-    )
-
+        )
         return account
 
 
-
+  #-------- Transfer --------
     def transfer(self,from_account_id,to_account_id,amount):
         #daryaft hesab
         from_acc = self.session.get(Account , from_account_id)
@@ -191,11 +201,24 @@ class AdminPanel:
         #bardasht az ferestande
         old_from_balance = from_acc.balance
         from_acc.balance -= amount
+        transaction_from = Transaction(
+            account_id=from_acc.id,
+            type="transfer_out",
+            amount=amount,
+            time=datetime.now()
+        )
+        self.session.add(transaction_from)
 
         #variz be girande
         old_to_balance = to_acc.balance
         to_acc.balance += amount
-
+        transaction_to = Transaction(
+            account_id=to_acc.id,
+            type="transfer_in",
+            amount=amount,
+            time=datetime.now()
+        )
+        self.session.add(transaction_to)
         self.session.commit()
 
         #last print
@@ -211,7 +234,7 @@ class AdminPanel:
         )
         return from_acc, to_acc
 
-
+     #-------- Transactions History --------
     def show_transaction(self,account_id):
         #cheak kardan account
         account = self.session.get(Account , account_id)
@@ -249,7 +272,7 @@ class AdminPanel:
     
 
 
-    #shomare card
+     #-------- Generate Card Number --------
     def _generate_card_number(self):
         return ''.join(np.random.randint(0, 10, 16).astype(str))
     
