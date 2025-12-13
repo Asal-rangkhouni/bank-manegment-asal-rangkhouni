@@ -8,13 +8,12 @@
 
 import tkinter as tk 
 from tkinter import messagebox, ttk
-from core import AdminPanel
 
 class AdminGUI:
 
     def __init__(self,bank_system):
         self.bank= bank_system 
-        self.root=tk.TK()
+        self.root=tk.Tk()
         self.root.title('Bank Management System')
         self.root.geometry('800x600')
         self.root.resizable(False,False)
@@ -69,15 +68,7 @@ class AdminGUI:
         command=self.login
     ).pack(pady=20)
         
-        #navar vaziat
-        self.status_label = tk.Label(
-        self.root,
-        text="READY | Please enter admin credentials...",
-        font=("Consolas", 10),
-        bg="#20252b",
-        fg="#90a4ae"
-    )
-        
+        #navar vaziat   
         self.status_label = tk.Label(self.root, text="READY | Please enter admin credentials...",
                              font=("Consolas", 10),
                              bg="#20252b",
@@ -105,6 +96,15 @@ class AdminGUI:
     def show_dashboard(self):
 
         self.clear()
+        self.status_label = tk.Label(
+            self.root,
+            text="READY | Insert admin command...",
+            font=("Consolas", 10),
+            bg="#20252b",
+            fg="#90a4ae"
+        )
+        self.status_label.pack(side="bottom", fill="x")
+
         #rang koli paszamine
         self.root.configure(bg= "#20252b")
 
@@ -115,8 +115,8 @@ class AdminGUI:
         # esm baka screen
         tk.Label(
             screen ,
-            text = "BAKN ADMIN TERMINAL " , 
-            font= ("Consolas" , 18 , " bold"),
+            text = "BANK ADMIN TERMINAL " , 
+            font= ("Consolas" , 18 , "bold"),
             bg= "#1b2a34" ,
             fg = "#00ff99"
         ).pack(pady=10)
@@ -175,57 +175,57 @@ class AdminGUI:
 
 
         #payam atm
-        status = tk.Label(
-        self.root,
-        text="READY | Insert admin command...",
-        font=("Consolas", 10),
-        bg="#20252b",
-        fg="#90a4ae"
-    )
-        status.pack(side="bottom", fill="x")
+        self.status_label.config(text="READY | Insert admin command...")
 
 
 
     #-----OPTIONALLLLL-----
     def gui_create_customer(self):
         self.clear()
-        tk.Label(self.root , text="Creat New Customer" , font=("Arial" , 18 , "bold")).pack(pady=20)
+        tk.Label(self.root , text="Create New Customer" , font=("Arial" , 18 , "bold")).pack(pady=20)
 
         #frame vorodi
         frame = tk.Frame(self.root)
         frame.pack(pady=10)
 
-        lbl1 = ["Name" , "Last name" , "Email" , "Phone" , "Address"]
-        self.entrise = {}
+        labels ={
+            "name": "Name",
+            "last_name": "Last Name",
+            "email": "Email",
+            "phone": "Phone",
+            "address": "Address"
+        }
 
-        for label in lbl1 :
-            tk.Label(frame , text= label + ":" , anchor="w" ).pack()
+        self.entries = {}
+
+        for key, text in labels.items():
+            tk.Label(frame, text=text + ":").pack(anchor="w")
             entry = tk.Entry(frame, width=40)
             entry.pack(pady=5)
-            self.entries[label.lower()] = entry
+            self.entries[key] = entry
 
         #dokme moshtari
-        tk.Button(self.root , text="Creat Customer" , bg="green" , fg="white" , width=20 , command=self.create_customer_action).pack(pady=20)
-        tk.Button(self.root , text="Back" , command= self.show_dashboard)
+        tk.Button(self.root , text="Create Customer" , bg="green" , fg="white" , width=20 , command=self.create_customer_action).pack(pady=20)
+        tk.Button(self.root , text="Back" , command= self.show_dashboard).pack(pady=5)
 
         #dokme submit
-        def create_customer_action():
-            name = self.entries["name"].get()
-            last_name = self.entrise["Last_name"].get()
-            email = self.entrise["email"].get()
-            phone = self.entrise["phone"].get()
-            address = self.entrise["address"].get()
+    def create_customer_action(self):
+        name = self.entries["name"].get()
+        last_name = self.entries["last_name"].get()
+        email = self.entries["email"].get()
+        phone = self.entries["phone"].get()
+        address = self.entries["address"].get()
 
-            if not name or not email:
-                messagebox.showerror("Error", "Name and Email are required!")
-                return
-            
-            try:
-                self.bank.create_customer(name, last_name, email, phone, address)
-                messagebox.showinfo("Success", "Customer created successfully!")
-                self.show_dashboard()
-            except Exception as e:
-                messagebox.showerror("Error", str(e))
+        if not name or not email:
+            messagebox.showerror("Error", "Name and Email are required!")
+            return
+
+        try:
+            self.bank.create_customer(name, last_name, email, phone, address)
+            messagebox.showinfo("Success", "Customer created successfully!")
+            self.show_dashboard()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
     
     def gui_create_account(self):
