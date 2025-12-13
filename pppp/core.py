@@ -105,7 +105,7 @@ class AdminPanel:
         
         # variz movafagh
         old_balance = account.balance
-        account.balance = old_balance + amount
+        account.balance += amount
         
          #zakhire tarakonesh
         transaction = Transaction(
@@ -197,9 +197,12 @@ class AdminPanel:
                 f"Reason: Insufficient funds"
             )
             raise Exception("Insufficient balance")
+            
+            old_from_balance = from_acc.balance
+            old_to_balance = to_acc.balance
+
         
         #bardasht az ferestande
-        old_from_balance = from_acc.balance
         from_acc.balance -= amount
         transaction_from = Transaction(
             account_id=from_acc.id,
@@ -210,7 +213,6 @@ class AdminPanel:
         self.session.add(transaction_from)
 
         #variz be girande
-        old_to_balance = to_acc.balance
         to_acc.balance += amount
         transaction_to = Transaction(
             account_id=to_acc.id,
@@ -219,6 +221,7 @@ class AdminPanel:
             time=datetime.now()
         )
         self.session.add(transaction_to)
+
         self.session.commit()
 
         #last print
@@ -249,7 +252,7 @@ class AdminPanel:
         .filter_by(account_id=account_id)
         .order_by(Transaction.time.desc())
         .all()
-    )
+        )
         if not transactions:
             print(f"[BAMK SYSTEM]: NO Transaction found for account : {account_id}")
             return []
@@ -259,11 +262,9 @@ class AdminPanel:
         print("-" *60 )
         
         for i in transactions:
-            sign = "+" if i.type == "deposit" else "-"
+            sign = "+" if i.type in ["deposit", "transfer_in"] else "-"
             time_str = i.time.strftime("%Y-%m-%d %H:%M:%S")
-            print(
-            f"{time_str} | {i.type.upper():8} | {sign}{i.amount:,.0f} USD")
-            
+            print(f"{time_str} | {i.type.upper():8} | {sign}{i.amount:,.0f} USD")
             print("-" * 60)
 
         return transactions
