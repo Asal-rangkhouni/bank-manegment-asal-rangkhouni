@@ -37,9 +37,10 @@ class Account(Base):
     __tablename__ = "accounts"
     id = Column(Integer, primary_key=True)
     balance= Column(Float, default=0.0) #mojodi , 00
-    type = Column(String, default="standard") # 'standard', 'foreign', 'crypto'
+    account_type = Column(String, default="standard") 
     pin = Column(String, nullable=False) #pin kodom account ro khod kon
     customer_id= Column(Integer, ForeignKey("customers.id"))
+    card_number = Column(String, unique=True)
     
     #-------relationships-----
     customer= relationship("Customer", back_populates="accounts")
@@ -48,9 +49,9 @@ class Account(Base):
 
 #-------Transactions------
 class Transaction(Base):
-    __tablename__ = "Transaction"
+    __tablename__ = "transaction"
     id = Column(Integer , primary_key= True)
-    account_id = Column(Integer , ForeignKey = ("accounts.id"), nullable=False)
+    account_id = Column(Integer , ForeignKey("accounts.id"), nullable=False)
     amount = Column(Float, nullable=False)
     type = Column(String, nullable=False)
     time = Column(DateTime, default=datetime.utcnow)
