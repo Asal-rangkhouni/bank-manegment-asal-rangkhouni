@@ -1,13 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base,sessionmaker
 
-DATABASE_URL = "sqlite:///database.db"
+DATABASE_URL = "mysql+mysqlconnector://asal:Milad004800@localhost/your_db_name"
 
-engine= create_engine("mysql+mysqlconnector://asal:Milad004800@localhost",echo=False, future=True)
+engine= create_engine(DATABASE_URL, echo=False, future=True)
 
 Base = declarative_base()
 
-SessionLocal = sessionmaker(bind=engine , autoflash=False, autocommit=False,future=True )
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
+
 #helper
 def get_session():
     return SessionLocal()
